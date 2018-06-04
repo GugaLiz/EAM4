@@ -105,12 +105,15 @@ handleImportSuccess = () =>{
   handleRefresh =(e) =>{
     e.preventDefault();
     const { dispatch } = this.props;
+    const val = {
+      Name:this.state.searchName || ''
+    };
 
     dispatch({
       type: 'asset/fetch',
+      payload:val
     })
   }
-
 
   handleDetialModalVisible = (flag) => {
     this.setState({
@@ -223,6 +226,11 @@ handleImportSuccess = () =>{
       handleDetialModalVisible:this.handleDetialModalVisible,  
     };
 
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    }
+
   const columns = [
   {
     title: '资产编号',
@@ -333,7 +341,7 @@ handleImportSuccess = () =>{
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-            <div style={{marginTop:'-40px'}}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+            <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <AssetImport

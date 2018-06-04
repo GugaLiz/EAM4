@@ -120,6 +120,9 @@ export async function updateDepartment(params) {
   });
 }
 
+export async function queryUserRole(params) {
+  return request(`api/userrole?${stringify(params)}`);
+}
 
 export async function fakeSubmitForm(params) {
   return request('/api/forms', {

@@ -8,8 +8,7 @@ import Authorized from '../../utils/Authorized';
 import styles from './SiteMap.less';
 
 import L from 'leaflet';
-import { Map, TileLayer } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import { Map, TileLayer,Marker,Popup } from 'react-leaflet';
 
 import "leaflet/dist/leaflet.css";
 
@@ -24,6 +23,21 @@ L.Icon.Default.mergeOptions({
   	shadowUrl: require('../../assets/markers/marker-shadow.png')
 })
 
+const PopupMarker = ({ children,position }) => (
+  <Marker position={position}>
+  <Popup><div>
+  {children}
+  </div></Popup>
+</Marker>
+)
+
+const MarkersList = ({markers}) => {
+  const items = markers.map(({ key,...props}) => (
+    <PopupMarker key={key} {...props} />   
+  ))
+  return <div>{items}</div>
+}
+
 @connect(({ site, loading }) => ({
   site,
   loading: loading.models.site,
@@ -35,6 +49,9 @@ export default class SiteMap extends PureComponent {
       type: 'site/fetch',
     });
   }
+
+  
+
   render() {
     const { site:{data}, loading } = this.props;
     
@@ -42,6 +59,8 @@ export default class SiteMap extends PureComponent {
 
     const dataList = { data }.data.list;
     let cellPoints = [];
+
+    //cellPoints.push({key:'1',position:[22.7047,113.302],children:'jz'})
 
     const sytlep = {
       width:'100%',
@@ -71,7 +90,21 @@ export default class SiteMap extends PureComponent {
       <span>维护人员：${maintainer}</span>
       <br />
       </div>`
-      cellPoints.push({position:[lat, lng],popup:popupDiv});
+      let popupContent = `<span>城市：${city}</span>
+      <br />
+      <span>基站名称：${name}</span>
+      <br />
+      <span>经度：${lng}</span>
+      <br />
+      <span>纬度：${lat}</span>
+      <br />
+      <span>地区：${district}</span>
+      <br />
+      <span>地址：${Address}</span>
+      <br />
+      <span>维护人员：${maintainer}</span>
+      <br />`
+      cellPoints.push({key:name,position:[lng, lat],children:popupContent});
     });
     
     const style= { 
@@ -99,13 +132,13 @@ export default class SiteMap extends PureComponent {
       zIndex: 19999,
     };
 
-    const createClusterCustomIcon = function (cluster) {
-      return L.divIcon({
-        html: `<span>${cluster.getChildCount()}</span>`,
-        className: styles.markercustom,
-        iconSize: L.point(40, 40, true)
-      });
-    };
+    // const createClusterCustomIcon = function (cluster) {
+    //   return L.divIcon({
+    //     html: `<span>${cluster.getChildCount()}</span>`,
+    //     className: styles.markercustom,
+    //     iconSize: L.point(40, 40, true)
+    //   });
+    // };
 
     return (
             <Content>
@@ -143,17 +176,13 @@ export default class SiteMap extends PureComponent {
         </Button.Group>
   </div>
   
-  <Map className={styles.markercluster} center={position} zoom={13} style={{width: '100%', height: '100%'}}>
+  <Map center={position} zoom={13} style={{width: '100%', height: '100%'}}>
     <TileLayer
       url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
     />
 
-    <MarkerClusterGroup 
-    spiderfyDistanceMultiplier={2}
-    iconCreateFunction={createClusterCustomIcon}
-    markers={cellPoints}   
-    />
-       
+      <MarkersList markers={cellPoints} />
+
     </Map>
   </div>
             </Content>

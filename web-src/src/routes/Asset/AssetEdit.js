@@ -65,7 +65,7 @@ export default class AssetEdit extends PureComponent{
             label = "资产名称"> {
                 form.getFieldDecorator('Name',{
                     rules:[{required: true, message: '必须输入资产名称'}],
-                    initialValue:record.name
+                    initialValue:record.Name
                 })(<Input />
             )
             }
@@ -87,7 +87,7 @@ export default class AssetEdit extends PureComponent{
             label = "机身码"> {
                 form.getFieldDecorator('BodyNumber',{
                     rules:[{required: true, message: '必须输入机身码'}],
-                    initialValue:record.bodyNumber
+                    initialValue:record.BodyNumber
                 })(<Input />
             )
             }
@@ -98,7 +98,7 @@ export default class AssetEdit extends PureComponent{
         label = "品牌"> {
                 form.getFieldDecorator('Brand',{
                     rules:[{required: true, message: '必须输入资产名称'}],
-                    initialValue:record.brand
+                    initialValue:record.Brand
                 })(<Input />
             )
             }
@@ -112,7 +112,7 @@ export default class AssetEdit extends PureComponent{
         label = "型号"> {
                 form.getFieldDecorator('Model',{
                     rules:[{required: true, message: '必须输入型号'}],
-                    initialValue:record.model
+                    initialValue:record.Model
                 })(<Input />
             )
             }
@@ -123,7 +123,7 @@ export default class AssetEdit extends PureComponent{
         label = "配置"> {
                 form.getFieldDecorator('Configure',{
                     rules:[{required: true, message: '必须输入配置'}],
-                    initialValue:record.configure
+                    initialValue:record.Configure
                 })(<Input />
             )
             }
@@ -134,7 +134,7 @@ export default class AssetEdit extends PureComponent{
             label = "购置日期"> {
                 form.getFieldDecorator('PurchaseDate',{   
                   rules:[{required: true, message: '必须选择购置日期'}],               
-                    initialValue:Moment(record.purchaseDate) || ''
+                    initialValue:Moment(record.PurchaseDate) || ''
                 })(<DatePicker showTime format="YYYY-MM-DD" />
             )
             }
@@ -143,9 +143,9 @@ export default class AssetEdit extends PureComponent{
       <Col className="gutter-row" span={6}>
       <FormItem {...formItemLayout}
             label = "购置价格"> {
-                form.getFieldDecorator('longitude',{
+                form.getFieldDecorator('PurchaseValue',{
                   rules:[{required: true, message: '必须输入购置价格'}],
-                    initialValue:record.longitude
+                    initialValue:record.PurchaseValue
                 })(<InputNumber style={inputNumStyle}/>
             )
             }
@@ -157,9 +157,9 @@ export default class AssetEdit extends PureComponent{
       <Col className="gutter-row" span={6}>
       <FormItem {...formItemLayout}
             label = "目前价值"> {
-                form.getFieldDecorator('longitude',{
+                form.getFieldDecorator('CurrentValue',{
                   rules:[{required: true, message: '必须输入目前价值员'}],
-                    initialValue:record.longitude
+                    initialValue:record.CurrentValue
                 })(<InputNumber style={inputNumStyle}/>
             )
             }
@@ -168,9 +168,9 @@ export default class AssetEdit extends PureComponent{
       <Col className="gutter-row" span={6}>
       <FormItem {...formItemLayout}
             label = "保修期（月）"> {
-                form.getFieldDecorator('longitude',{
+                form.getFieldDecorator('Warranty',{
                   rules:[{required: true, message: '必须输入保修期'}],
-                    initialValue:record.longitude
+                    initialValue:record.Warranty
                 })(<InputNumber style={inputNumStyle}/>
             )
             }
@@ -181,7 +181,7 @@ export default class AssetEdit extends PureComponent{
         label = "供应商"> {
                 form.getFieldDecorator('Supplier',{
                     rules:[{required: true, message: '必须输入供应商'}],
-                    initialValue:record.supplier
+                    initialValue:record.Supplier
                 })(<Input />
             )
             }
@@ -211,7 +211,7 @@ export default class AssetEdit extends PureComponent{
             label = "入网时间"> {
                 form.getFieldDecorator('InNetTime',{  
                   rules:[{required: true, message: '必须选择入网时间'}],                
-                    initialValue:Moment(record.inNetTime) || ''
+                    initialValue:Moment(record.InNetTime) || ''
                 })(<DatePicker showTime format="YYYY-MM-DD" />
             )
             }
@@ -232,7 +232,7 @@ export default class AssetEdit extends PureComponent{
       <FormItem {...formItemLayout}
             label = "更新标签时间"> {
                 form.getFieldDecorator('UpdateTime',{                  
-                    initialValue:Moment(record.updateTime) || ''
+                    initialValue:Moment(record.UpdateTime) || ''
                 })(<DatePicker showTime format="YYYY-MM-DD" />
             )
             }
@@ -243,7 +243,7 @@ export default class AssetEdit extends PureComponent{
         label = "存放地点"> {
                 form.getFieldDecorator('StorageLocation',{
                   rules:[{required: true, message: '必须输入存放地点'}],
-                    initialValue:record.storageLocation
+                    initialValue:record.StorageLocation
                 })(<Input/>
             )
             }
@@ -255,8 +255,8 @@ export default class AssetEdit extends PureComponent{
       <Col className="gutter-row" span={6}>
       <FormItem {...formItemLayout }
             label = "使用状态" > {
-                getFieldDecorator('UserState', {
-                    initialValue: record.userState,
+                getFieldDecorator('UseState', {
+                    initialValue: record.UseState,
                 })(
                     <Select style={{ width: '100%' }}>
                     <Select.Option value="1">使用中</Select.Option>
@@ -272,7 +272,7 @@ export default class AssetEdit extends PureComponent{
         label = "维护人员"> {
                 form.getFieldDecorator('Maintainer',{
                   rules:[{required: true, message: '必须输入维护人员'}],
-                    initialValue:record.maintainer
+                    initialValue:record.Maintainer
                 })(<Input />
             )
             }
@@ -283,7 +283,7 @@ export default class AssetEdit extends PureComponent{
         label = "使用人"> {
                 form.getFieldDecorator('User',{
                   rules:[{required: true, message: '必须输入使用人'}],
-                    initialValue:record.user
+                    initialValue:record.User
                 })(<Input/>
             )
             }
@@ -293,7 +293,7 @@ export default class AssetEdit extends PureComponent{
       <FormItem {...formItemLayout}
         label = "使用部门"> {
                 form.getFieldDecorator('Department',{               
-                    initialValue:record.department
+                    initialValue:record.Department
                 })(<Input/>
             )
             }
@@ -305,9 +305,9 @@ export default class AssetEdit extends PureComponent{
       <Col className="gutter-row" span={12}>
       <FormItem {...formItemLayout2 }
             label = "备注" > {
-                getFieldDecorator('memo', {
+                getFieldDecorator('Memo', {
                     rules: [{}],
-                    initialValue:record.memo
+                    initialValue:record.Memo
                 })( <
                     TextArea style = {
                         { minHeight: 32 }

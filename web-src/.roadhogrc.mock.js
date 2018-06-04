@@ -16,7 +16,7 @@ import { format, delay } from 'roadhog-api-doc';
 import { getDevicefile } from './mock/devicefile';
 import { getDevicelist } from './mock/devicelist';
 import { getDeviceheartbeat } from './mock/deviceheartbeat';
-import { getAssetClass,getDepartment} from './mock/datadictionary';
+import { getAssetClass,getDepartment,getUserRole} from './mock/datadictionary';
 
 
 // 是否禁用代理
@@ -146,6 +146,7 @@ const proxy = {
 
   'GET /api/assetclass': getAssetClass,
   'GET /api/department': getDepartment,
+  'GET /api/userrole':getUserRole,
   
   'POST /api/forms': (req, res) => {
     res.send({ message: 'Ok' });

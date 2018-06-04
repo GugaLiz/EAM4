@@ -81,7 +81,6 @@ export default class DeviceHeartbeat extends PureComponent {
       });
       const vals = {
         DeviceGuid: txt, 
-          ... this.state.searchFilters
       }
 
       dispatch({
@@ -90,6 +89,18 @@ export default class DeviceHeartbeat extends PureComponent {
       });
   }
 
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      DeviceGuid:this.state.searchDeviceGuid || ''
+    };
+    
+    dispatch({
+      type: 'devicefile/fetch',
+      payload:val
+    })
+  }
 
   handleItemDownload = (rec) => {
     console.info(rec)
@@ -114,6 +125,11 @@ export default class DeviceHeartbeat extends PureComponent {
     const { devicefile: { heartbeat }, loading } = this.props;
     const {selectedRows, record } = this.state;
     const data = heartbeat;
+
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
 
     const parentMethods = {
       handleItemDownload:this.handleItemDownload,
@@ -163,6 +179,7 @@ export default class DeviceHeartbeat extends PureComponent {
               columns={columns}
               onChange={this.handleStandardTableChange}
             />
+          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
     );

@@ -69,7 +69,8 @@ export default class Analysis extends Component {
     const {
       changeData,
       repairData,
-      useDeptData,
+      //useDeptData,
+      updateSiteData,
 
       assetData,
       assetDataOnline,
@@ -115,11 +116,18 @@ export default class Analysis extends Component {
         key: 'Idx',
       },
       {
-        title: '部门名称',
+        title: '基站名称',
         dataIndex: 'Name',
         key: 'Name',
       },
       {
+        title:'更新数量',
+        dataIndex:'Count',
+        key:'Count',
+        sorter: (a, b) => a.Count - b.Count,
+        className: styles.alignRight,
+      }
+     /* {
         title: '资产数量',
         dataIndex: 'Count',
         key: 'Count',
@@ -135,7 +143,7 @@ export default class Analysis extends Component {
             <span style={{ marginRight: 4 }}>{text}%</span>
         ),
         align: 'right',
-      },
+      }, */
     ];
 
     //const activeKey = currentTabKey || (offlineData[0] && offlineData[0].name);
@@ -314,7 +322,7 @@ export default class Analysis extends Component {
            <Card
               loading={loading}
               bordered={false}
-              title="使用部门排行"
+              title="基站设备更新排行"
               //extra={iconGroup}
               style={{ marginTop: 2,  minHeight: 509  }}
             >
@@ -322,7 +330,7 @@ export default class Analysis extends Component {
                 rowKey={record => record.Idx}
                 size="small"
                 columns={columns}
-                dataSource={useDeptData}
+                dataSource={updateSiteData}
                 pagination={{
                   style: { marginBottom: 0 },
                   pageSize: 8,

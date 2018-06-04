@@ -1,4 +1,4 @@
-import { queryAssetClass, queryDepartment, importAssetClass, importDepartment, updateAssetClass, updateDepartment} from '../services/api';
+import { queryAssetClass, queryDepartment, queryUserRole, importAssetClass, importDepartment, updateAssetClass, updateDepartment} from '../services/api';
 
 export default {
   namespace: 'datadictionary',
@@ -11,6 +11,10 @@ export default {
     dept: {
       list: [],
       pagination: {},
+    },
+    role:{
+      list:[],
+      pagination:{},
     }
 
   },
@@ -29,6 +33,14 @@ export default {
       yield put({
         type: 'saveDepartment',
         payload: response,
+      });
+    },
+
+    *fetchrole({ payload},{call,put}) {
+      const response = yield call(queryUserRole,payload);
+      yield put({
+        type:'saveUserRole',
+        payload:response
       });
     },
 
@@ -77,6 +89,12 @@ export default {
         dept: action.payload,
       };
     },
-
+    saveUserRole(state,action){
+      return {
+        ...state,
+        role:action.payload,
+      };
+    },
+    
   },
 };

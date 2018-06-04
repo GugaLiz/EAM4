@@ -26,43 +26,89 @@ const { TextArea } = Input;
 
 
 const FormItem = Form.Item;
+@connect(({ user, loading }) => ({
+    user,
+    loading: loading.models.user,
+  }))
 @Form.create()
 export default class UserEdit extends PureComponent {
     state = {
-        confirmDirty: false
+        recordId: 0,
+        record: {}
     };
 
     handleConfirmBlur = (e) => {
         const value = e.target.value;
         this.setState({ confirmDirty: this.state.confirmDirty || !!value });
     }
-    compareToFirstPassword = (rule, value, callback) => {
-        const form = this.props.form;
-        if (value && value !== form.getFieldValue('pass')) {
-            callback('两次密码不一致，请重新输入!');
-        } else {
-            callback();
-        }
-    }
-    validateToNextPassword = (rule, value, callback) => {
-        const form = this.props.form;
-        if (value && this.state.confirmDirty) {
-            form.validateFields(['cpass'], { force: true });
-        }
-        callback();
+    handleSubmit = (e) => {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+        if (!err) {
+            let me = this;
+            this.props.dispatch({
+                type: 'user/update',
+                payload: {
+                    Id: this.state.recordId,
+                    ...values
+                },
+                callback:  function(resp){
+                if(resp){
+                    if(resp.status=="ok"){
+                        message.success('修改成功');
+                        me.setState({
+                            uploading: false,
+                        });
+                        //me.props.form.resetFields();
+                        //me.props.handleEditModalVisible(false);
+                    } else {
+                        message.error(resp.message);
+                        me.setState({
+                            uploading: false,
+                        });
+                    }
+                }
+                }
+             });
+            }
+        });
     }
 
+    componentWillReceiveProps(nextProps) {
+      const id = nextProps.editRecordId;
+      if(id != null &&id != this.state.recordId){
+            this.setState({
+              recordId: id
+          });
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'user/get',
+        payload: {
+          id:id 
+        },
+        callback: (resp) =>{
+          if(resp){
+            if(resp.status=="ok"){
+              const rec = resp.record;
+              console.info(rec);
+             this.setState({
+                record: rec,
+              });
+            }else {
+              message.error(resp.message);
+            }
+          }
+        }
+      });
+      }
+  }
+
     render() {
-        const { record,modalVisible, form, handleEdit, handleModalVisible } = this.props;
-        console.log(record)
+        const { modalVisible, form, handleEdit, handleModalVisible } = this.props;
+        const { record } = this.state;
+
         const { getFieldDecorator, getFieldValue } = form;
-        const okHandle = () => {
-            form.validateFields((err, fieldsValue) => {
-                if (err) return;
-                form.resetFields();
-                this.props.handleEdit(record.key,fieldsValue);
-            });
-        };
+
         const formItemLayout = {
             labelCol: {
                 xs: { span: 8 },
@@ -86,10 +132,9 @@ export default class UserEdit extends PureComponent {
         return ( <
             Modal title = "编辑用户" 
             visible = { modalVisible }
-            onOk = { okHandle }
-            onCancel = {
-                () => this.props.handleEditModalVisible()
-            } >
+            onOk={this.handleSubmit}
+            onCancel={() => this.props.handleEditModalVisible()}
+            >
 
             <Row gutter={24}>
             <Col span={12}>
@@ -155,44 +200,6 @@ export default class UserEdit extends PureComponent {
             </Col>
             </Row>
 
-            <Row gutter={24}>
-            <Col span={24}>
-            <FormItem {...formItemLayout2}
-            style={style}
-            label = "密码" > {
-                form.getFieldDecorator('Pass', {
-                    rules: [{ required: true, message: '必须输入密码' }, {
-                        validator: this.validateToNextPassword,
-                    }],
-                    
-                })( <
-                    Input type = "password"
-                    placeholder = "请输入密码" / >
-                )
-            } </FormItem>
-            </Col>
-            </Row>
-            <Row gutter={24}>
-            <Col span={24}>
-            <FormItem {...formItemLayout2}
-            style={style}
-            label = "确认密码" > {
-                form.getFieldDecorator('cpass', {
-                    rules: [{
-                        required: true,
-                        message: '必须输入确认密码'
-                    }, {
-                        validator: this.compareToFirstPassword
-                    }],
-                })( <
-                    Input type = "password"
-                    onBlur = { this.handleConfirmBlur }
-                    placeholder = "请输入确认密码" / >
-                )
-            } 
-            </FormItem> 
-            </Col>
-            </Row>
 
             <Row gutter={24}>
             <Col span={24}>

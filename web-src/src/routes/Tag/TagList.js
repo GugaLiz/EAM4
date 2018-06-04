@@ -97,6 +97,19 @@ export default class TagList extends PureComponent {
       });
   }
 
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      EPC:this.state.searchFilters || ''
+    };
+    
+    dispatch({
+      type: 'tag/fetch',
+      payload:val
+    })
+  }
+
   exportAll = () => {
     const { dispatch } = this.props;   
   }
@@ -108,6 +121,10 @@ export default class TagList extends PureComponent {
   render() {
     const { tag: { data }, loading } = this.props;
     const { selectedRows} = this.state;
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
     const columns = [
       {
         title: 'EPC编码',
@@ -210,6 +227,7 @@ export default class TagList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+         <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
       </PageHeaderLayout>

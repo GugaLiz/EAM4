@@ -27,7 +27,7 @@ export default {
     // "@primary-color": "#1DA57A",  
     // 修改图标库为本地离线，而不是阿里云CDN上的图标资源 
     "@icon-url": '"/iconfont/iconfont"' 
-  },
+  },*/
   /*proxy: {
     "/api": {
     "target": "http://localhost:80/",
@@ -36,7 +36,7 @@ export default {
     //"pathRewrite": { "^/api" : "" }
     }
   }, */
-  */
+  
 
 
 };

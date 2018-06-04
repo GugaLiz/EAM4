@@ -114,6 +114,7 @@ export default class AssetImport extends PureComponent{
           </Button>
         </Upload>
       </FormItem>
+      <a style={{marginLeft:'95px'}} href="" download="资产导入模板">下载导入模板</a>
     </Modal>
   );
   }

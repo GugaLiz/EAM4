@@ -93,6 +93,19 @@ export default class TableList extends PureComponent {
     });
   }
 
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      Name:this.state.searchName || ''
+    };
+    
+    dispatch({
+      type: 'user/fetch',
+      payload:val
+    })
+  }
+
   handleAddModalVisible = (flag) => {
     this.setState({
       addModalVisible: !!flag,
@@ -186,11 +199,6 @@ export default class TableList extends PureComponent {
     const { user: { data }, loading } = this.props;
     const { selectedRows, addModalVisible,editModalVisible, record } = this.state;
     //console.info(data)
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">禁用</Menu.Item>
-      </Menu>
-    );
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -198,6 +206,12 @@ export default class TableList extends PureComponent {
       handleAddModalVisible: this.handleAddModalVisible,
       handleEditModalVisible: this.handleEditModalVisible,
     };
+
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
+
   const columns = [
   {
     title: '账号',
@@ -292,6 +306,7 @@ export default class TableList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+         <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <UserAdd

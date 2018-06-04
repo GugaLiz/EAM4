@@ -16,6 +16,7 @@ for (let i = 0; i < 46; i += 1) {
     progress: Math.ceil(Math.random() * 100),
     Province: Math.floor(Math.random() * 10) % 2 ? '广东' : '广西',
     City: Math.floor(Math.random() * 10) % 2 ? '珠海' : '武汉',
+    Maintainer:`m${i}`
   });
 }
 

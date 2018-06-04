@@ -186,9 +186,28 @@ export default class SiteList extends PureComponent {
     });
   }
 
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      Name:this.state.searchName || ''
+    };
+    
+    dispatch({
+      type: 'site/fetch',
+      payload:val
+    })
+  }
+
   render() {
     const { site: { data }, loading } = this.props;
     const { selectedRows, importModalVisible, addModalVisible, editModalVisible, record } = this.state;
+
+    const dataList = {data}.data.list;
+    const maintainers = [];
+    dataList.map(item => {
+      maintainers.push(item.Maintainer)
+    })
 
     const parentMethods = {
       handleAdd: this.handleAdd,
@@ -198,6 +217,12 @@ export default class SiteList extends PureComponent {
       handleImportModalVisible: this.handleImportModalVisible,
       handleEditModalVisible: this.handleEditModalVisible,
     };
+
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
+
   const columns = [
   {
     title: '城市',
@@ -286,6 +311,7 @@ export default class SiteList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <SiteImport
@@ -295,7 +321,8 @@ export default class SiteList extends PureComponent {
         <SiteEdit
         {...parentMethods}
         modalVisible={editModalVisible}
-        record = {record}   
+        record = {record}  
+        maintainers={maintainers} 
         />  
       </Content>
     );

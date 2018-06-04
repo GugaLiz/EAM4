@@ -3,19 +3,20 @@ import { Table, Button, Input, message, Popconfirm, Divider, DatePicker,Icon } f
 import moment from 'moment';
 import styles from './style.less';
 
-export default class DepartmentEdit extends PureComponent {
-  constructor(props) {
-    super(props);
+export default class UserRoleEdit extends PureComponent {
+  // constructor(props) {
+  //   super(props);
 
-    this.state = {
-      data: props.value,
+    state = {
+      selectedRows:this.props.selectedRows,
+      data: this.props.value,
       loading: false,
       filterDropdownVisible:false,
       filtered:false,
 
       searchName:"",
     };
-  }
+  //}
   componentWillReceiveProps(nextProps) {
     if ('value' in nextProps) {
       this.setState({
@@ -33,8 +34,9 @@ export default class DepartmentEdit extends PureComponent {
   getRowByKey(key, newData) {
     return (newData || this.state.data).filter(item => item.Id === key)[0];
   }
-  index = 0;
+  
   cacheOriginData = {};
+
   toggleEditable = (e, key) => {
     e.preventDefault();
     const newData = this.state.data.map(item => ({ ...item }));
@@ -48,6 +50,7 @@ export default class DepartmentEdit extends PureComponent {
       this.setState({ data: newData });
     }
   };
+
   remove(key) {
     const newData = this.state.data.filter(item => item.key !== key);
     this.setState({ data: newData });
@@ -55,12 +58,13 @@ export default class DepartmentEdit extends PureComponent {
 
    this.props.handleDelete(key);
   }
-
+  
   handleKeyPress(e, key) {
     if (e.key === 'Enter') {
       this.saveRow(e, key);
     }
   }
+
   handleFieldChange(e, fieldName, key) {
     const newData = this.state.data.map(item => ({ ...item }));
     const target = this.getRowByKey(key, newData);
@@ -69,6 +73,7 @@ export default class DepartmentEdit extends PureComponent {
       this.setState({ data: newData });
     }
   }
+
   saveRow(e, key) {
     e.persist();
     this.setState({
@@ -94,11 +99,11 @@ export default class DepartmentEdit extends PureComponent {
       this.setState({
         loading: false,
       });
-
       this.props.handleEdit(key,target);
 
     }, 500);
   }
+
   cancel(e, key) {
     this.clickedCancel = true;
     e.preventDefault();
@@ -137,7 +142,7 @@ export default class DepartmentEdit extends PureComponent {
       Name:this.state.searchName || ''
     };
     
-   this.props.handleSearch(val);
+    this.props.handleSearch(val);
   }
 
   showTotal = (total) =>{
@@ -156,13 +161,14 @@ export default class DepartmentEdit extends PureComponent {
       display: this.state.loading?"none":"block"
     };
 
+
     const columns = [
       {
         title: '编号',
         dataIndex: 'Id',
       },
       {
-        title: '部门名称',
+        title: '角色名称',
         dataIndex: 'Name',
         key: 'Name',
         filterDropdown:(
@@ -192,7 +198,45 @@ export default class DepartmentEdit extends PureComponent {
                 autoFocus
                 onChange={e => this.handleFieldChange(e, 'Name', record.Id)}
                 onKeyPress={e => this.handleKeyPress(e, record.Id)}
-                placeholder="资产名称"
+                placeholder="角色名称"
+              />
+            );
+          }
+          return text;
+        },
+      },
+      {
+        title:'创建时间',
+        dataIndex:'CreateTime',
+        key:'CreateTime',
+        render:(val,record) => {           
+            if(record.editable){
+                return(
+                    <DatePicker
+                defaultValue={moment(val)}
+                autoFocus
+                onChange={e => this.handleFieldChange(e, 'CreateTime', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
+                placeholder="创建时间"
+                />
+                );
+            }
+            return <span>{moment(val).format('YYYY-MM-DD')}</span>;
+        },
+      },
+      {
+        title:'创建者',
+        dataIndex:'CreateAccount',
+        key:'CreateAccount',
+        render: (text, record) => {
+          if (record.editable) {
+            return (
+              <Input
+                value={text}
+                autoFocus
+                onChange={e => this.handleFieldChange(e, 'CreateAccount', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
+                placeholder="创建者"
               />
             );
           }
@@ -219,35 +263,8 @@ export default class DepartmentEdit extends PureComponent {
         },
       },
       {
-        title:'创建时间',
-        dataIndex:'CreateTime',
-        key:'CreateTime',
-        width: 108,
-        render:(val,record) => {           
-            /*if(record.editable){
-                return(
-                    <DatePicker
-                defaultValue={moment(val)}
-                autoFocus
-                onChange={e => this.handleFieldChange(e, 'CreateTime', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
-                placeholder="创建时间"
-                />
-                );
-            }*/
-            return <span>{moment(val).format('YYYY-MM-DD')}</span>;
-        },
-      },
-      {
-        title:'创建者',
-        dataIndex:'CreateAccount',
-        width: 88,
-        key:'CreateAccount',
-      },
-      {
         title: '操作',
         key: 'action',
-        width: 108,
         render: (text, record) => {
           if (!!record.editable && this.state.loading) {
             return null;
@@ -276,7 +293,7 @@ export default class DepartmentEdit extends PureComponent {
             <span>
               <a onClick={e => this.toggleEditable(e, record.Id)}>编辑</a>
               <Divider type="vertical" />
-              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
+              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
                 <a>删除</a>
               </Popconfirm>
             </span>
@@ -288,10 +305,12 @@ export default class DepartmentEdit extends PureComponent {
     return (
       <Fragment>
         <Table
+        selectedRows={this.state.selectedRows}
           loading={this.state.loading}
           columns={columns}
           dataSource={this.state.data}
           pagination={paginationProps}
+          onSelectRow={this.handleSelectRows}
           rowClassName={record => {
             return record.editable ? styles.editable : '';
           }}

@@ -94,37 +94,6 @@ export default class ReaderList extends PureComponent {
     });
   }
 
-  toggleForm = () => {
-    this.setState({
-      expandForm: !this.state.expandForm,
-    });
-  }
-
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'reader/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
   handleSelectRows = (rows) => {
     this.setState({
       selectedRows: rows,
@@ -236,17 +205,23 @@ export default class ReaderList extends PureComponent {
     });
   }
 
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      ReaderId:this.state.searchReaderId || ''
+    };
+    
+    dispatch({
+      type: 'reader/fetch',
+      payload:val
+    })
+  }
+
   render() {
     const { reader: { data }, loading } = this.props;
     const { selectedRows, modalVisible, editModalVisible } = this.state;
     const { editRecordId } = this.state;
-
-    const menu = (
-      <Menu onClick={this.handleMenuClick} selectedKeys={[]}>
-        <Menu.Item key="remove">删除</Menu.Item>
-        <Menu.Item key="approval">批量审批</Menu.Item>
-      </Menu>
-    );
 
     const columns = [
       {
@@ -308,6 +283,11 @@ export default class ReaderList extends PureComponent {
       handleEditModalVisible:this.handleEditModalVisible,
     };
 
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    }
+
     return (
       <PageHeaderLayout>
         <Card bordered={false}>
@@ -336,6 +316,7 @@ export default class ReaderList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+            <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <CreateForm

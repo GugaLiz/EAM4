@@ -8,7 +8,8 @@ import PageHeaderLayout from '../../layouts/PageHeaderLayout';
 import styles from '../Setting/style.less';
 
 import AssetClass from './AssetClass';
-import Department from './Department';
+//import Department from './Department';
+import UserRole from './UserRole';
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane; 
@@ -26,8 +27,8 @@ export default class DataDictionary extends PureComponent {
          <AssetClass></AssetClass> 
         </TabPane>
 
-        <TabPane tab="使用部门" key="2">
-         <Department></Department> 
+        <TabPane tab="角色管理" key ="2">
+        <UserRole></UserRole>
         </TabPane>
       </Tabs>
       </div>

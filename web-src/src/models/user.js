@@ -1,4 +1,6 @@
-import { queryUsers, queryCurrent, updateUsers, removeUsers,addUser,
+import { queryUsers, queryCurrent, 
+removeUsers,
+addUser, updateUser,
 updateCurrent, updatePwd, fetchCurrentInfo,
 disabledUsers } from '../services/user';
 
@@ -13,7 +15,7 @@ export default {
     list: [],
     currentUser: {},
     currentEdit: {},
-respStatus: {status: "ok", message: ""},
+    respStatus: {status: "ok", message: ""},
   },
 
   effects: {
@@ -34,13 +36,6 @@ respStatus: {status: "ok", message: ""},
 
     *add({ payload, callback }, { call, put }) {
       const resp = yield call(addUser, payload);
-      /*if(resp){
-        yield put({
-          type: 'save',
-          payload: resp,
-        });
-      }*/
-      console.info(resp);
       if (callback) callback(resp);
     },
     *remove({ payload, callback }, { call, put }) {
@@ -67,22 +62,15 @@ respStatus: {status: "ok", message: ""},
       });
       if (callback) callback();
     },
-    *updateUsers({id,params},{call,put,select}){
-      yield call(updateUsers,id,params);
-      const response = yield call(updateUsers,payload);
-      yield put({
-        type:'updateUsers',
-        payload:response,
-      });
+
+    *get({payload, callback}, { call, put }) {
+      const resp = yield call(getUser, payload);
+      if (callback) callback(resp);
     },
-    *update({payload},{select,call,put}){
-      const id = yield select(({user}) => user.currentUser.id)
-      const newUser = {...payload,id}
-      const data = yield call(update,newUser)
-      yield put({
-        type:'save',
-      
-      });
+
+    *update({payload, callback},{call,put,select}){
+      const resp = yield call(updateUser,payload);
+      if (callback) callback(resp);
     },
 
     *updatePwd({payload}, { call, put }) {

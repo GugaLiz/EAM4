@@ -80,7 +80,6 @@ export default class TableList extends PureComponent {
       });
       const vals = {
         DeviceGuid: txt, 
-          ... this.state.searchFilters
       }
 
       dispatch({
@@ -88,6 +87,20 @@ export default class TableList extends PureComponent {
         payload: vals,
       });
   }
+
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      DeviceGuid:this.state.searchDeviceGuid || ''
+    };
+    
+    dispatch({
+      type: 'devicefile/fetch',
+      payload:val
+    })
+  }
+
   handleItemDownload = (rec) => {
     console.info(rec)
     this.props.dispatch({
@@ -116,6 +129,12 @@ export default class TableList extends PureComponent {
       handleItemDownload:this.handleItemDownload,
      // handleAddModalVisible: this.handleAddModalVisible,
     };
+
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
+
   const columns = [
   {
     title: '设备GUID',
@@ -184,6 +203,7 @@ export default class TableList extends PureComponent {
               columns={columns}
               onChange={this.handleStandardTableChange}
             />
+          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>     
     );

@@ -33,7 +33,7 @@ export default class SiteEdit extends PureComponent {
     };
 
     render() {
-        const { record,modalVisible, form, handleEdit, handleModalVisible } = this.props;
+        const { record,modalVisible, form, handleEdit, handleModalVisible,maintainers } = this.props;
         const { getFieldDecorator, getFieldValue } = form;
         const okHandle = () => {
             form.validateFields((err, fieldsValue) => {
@@ -66,6 +66,13 @@ export default class SiteEdit extends PureComponent {
         const inputNumStyle = {
             width:'100%'
         };
+
+        //维护人员下拉表
+        const options = [];
+        for(let i = 0;i<maintainers.length;i++){
+          options.push(<Select.Option key={i}>{maintainers[i]}</Select.Option>)
+        }
+
         return ( <
             Modal title = "编辑基站信息" 
             visible = { modalVisible }
@@ -79,49 +86,32 @@ export default class SiteEdit extends PureComponent {
             <FormItem {...formItemLayout}
             label="基站名称"
             >
-            <span style={{color:'black'}}>{record.name}</span>
+            <span style={{color:'black'}}>{record.Name}</span>
             </FormItem>
-            </Col>           
-            </Row>
-
-            <Row gutter={24}>
-            
+            </Col> 
             <Col span={12}>
             <FormItem {...formItemLayout}
             label="城市"
             >
-            <span>{record.city}</span>
+            <span>{record.City}</span>
             </FormItem>
-            </Col>
+            </Col>          
+            </Row>
+
+            <Row gutter={24}>            
             <Col span={12}>
             <FormItem {...formItemLayout}
             label="地区"
             >
-            <span>{record.district}</span>
+            <span>{record.District}</span>
             </FormItem>
             </Col>
-            </Row>
-
-            <Row gutter={24}>
-            
             <Col span={12}>
             <FormItem {...formItemLayout}
             label="地址"
             >
-            <span>{record.address}</span>
+            <span>{record.Address}</span>
             </FormItem>
-            </Col>
-            <Col span={12}>
-            <FormItem {...formItemLayout}
-            label = "维护人员"> {
-                form.getFieldDecorator('maintainer',{
-                    rules:[{required: true, message: '必须输入维护人员'}],
-                    initialValue:record.maintainer
-                })(<Input placeholder = "请输入维护人员" />
-            )
-            }
-            </FormItem>
-            
             </Col>
             </Row>
 
@@ -131,7 +121,7 @@ export default class SiteEdit extends PureComponent {
             label = "经度"> {
                 form.getFieldDecorator('longitude',{
                     rules:[{required: true, message: '必须输入经度'}],
-                    initialValue:record.longitude
+                    initialValue:record.Lng
                 })(<InputNumber placeholder = "请输入经度" style={inputNumStyle}/>
             )
             }
@@ -142,7 +132,7 @@ export default class SiteEdit extends PureComponent {
             label = "纬度"> {
                 form.getFieldDecorator('latitude',{
                     rules:[{required: true, message: '必须输入纬度'}],
-                    initialValue:record.latitude
+                    initialValue:record.Lat
                 })(<InputNumber placeholder = "请输入纬度" style={inputNumStyle}/>
             )
             }
@@ -153,26 +143,31 @@ export default class SiteEdit extends PureComponent {
             <Row gutter={24}>
             <Col span={12}>
             <FormItem {...formItemLayout}
-            label = "创建时间"> {
-                form.getFieldDecorator('createTime',{
-                    rules:[{required: true, message: '必须输入创建时间'}],
-                    initialValue:Moment(record.createTime)
-                })(<DatePicker showTime format="YYYY-MM-DD" />
-            )
-            }
+            label="维护人员"
+            >
+            <Select
+            showSearch
+            style={{width:150}}
+            placeholder="请选择维护人员"
+            optionFilterProp="children"
+            defaultValue={record.Maintainer}
+            filterOption={(input,option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0 }
+            >
+            {options}
+            </Select>
             </FormItem>
             </Col>
             <Col span={12}>
             <FormItem {...formItemLayout}
-            label = "创建者"> {
-                form.getFieldDecorator('createUserId',{
-                    rules:[{required: true, message: '必须输入创建者'}],
-                    initialValue:record.createUserId
-                })(<Input placeholder = "请输入创建者" />
+            label = "创建时间"> {
+                form.getFieldDecorator('createTime',{
+                    rules:[{required: true, message: '必须输入创建时间'}],
+                    initialValue:Moment(record.CreateTime)
+                })(<DatePicker showTime format="YYYY-MM-DD" />
             )
             }
             </FormItem>
-            </Col>
+            </Col>           
             </Row>
 
             <Row gutter={24}>
@@ -182,7 +177,7 @@ export default class SiteEdit extends PureComponent {
             label = "备注" > {
                 getFieldDecorator('memo', {
                     rules: [{}],
-                    initialValue:record.memo
+                    initialValue:record.Memo
                 })( <
                     TextArea style = {
                         { minHeight: 32 }

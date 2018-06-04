@@ -23,12 +23,11 @@ export async function addUser(params) {
   });
 }
 
-export async function updateUsers(id,params){
-  return request(`/api/user`,{
+export async function updateUser(id,params){
+  return request(`/api/user/edit`,{
     method:'PUT',
     body: {
       ...params,
-      method: 'put',
     },
   });
 }
@@ -75,6 +74,10 @@ export async function updatePwd(params){
       method: 'put',
     },
   });
+}
+
+export async function getReader(params){
+  return request(`/api/user/get?${stringify(params)}`);
 }
 
 

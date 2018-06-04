@@ -96,31 +96,6 @@ export default class TableList extends PureComponent {
     });
   }
 
-  handleMenuClick = (e) => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-
-    if (!selectedRows) return;
-
-    switch (e.key) {
-      case 'remove':
-        dispatch({
-          type: 'change/remove',
-          payload: {
-            no: selectedRows.map(row => row.no).join(','),
-          },
-          callback: () => {
-            this.setState({
-              selectedRows: [],
-            });
-          },
-        });
-        break;
-      default:
-        break;
-    }
-  }
-
   handleSelectRows = (rows) => {
     this.setState({
       selectedRows: rows,
@@ -148,6 +123,19 @@ export default class TableList extends PureComponent {
         type: 'tag/fetch',
         payload: vals,
       });
+  }
+
+  handleRefresh =(e) =>{
+    e.preventDefault();
+    const { dispatch } = this.props;
+    const val = {
+      EPC:this.state.searchFilters || ''
+    };
+    
+    dispatch({
+      type: 'tag/fetch',
+      payload:val
+    })
   }
 
   handleItemEdit = (record) => {
@@ -235,6 +223,10 @@ export default class TableList extends PureComponent {
   render() {
     const { change: { data }, loading } = this.props;
     const { selectedRows, modalVisible,editModalVisible,record } = this.state;
+    const styleRef = {
+      marginTop:'-40px',
+      display: loading?"none":"block"
+    };
     const parentMethods = {
       handleAdd: this.handleAdd,
       handleEdit:this.handleEdit,
@@ -329,7 +321,7 @@ export default class TableList extends PureComponent {
         width: 48,
         render: (text,record,index) => (
           <Fragment>
-            <a key={index} onClick ={() => {this.handleItemEdit(record)}} >编辑</a>
+            <a key={index} onClick ={() => {this.handleItemEdit(record)}} >审核</a>
           </Fragment>
         ),
       },
@@ -361,6 +353,7 @@ export default class TableList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
+          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>       
         <ChangeEdit

@@ -83,7 +83,7 @@ export default class ChangeEdit extends PureComponent {
             <FormItem {...formItemLayout}
             label="资产名称"
             >
-            <span style={{color:'black'}}>{record.assetName}</span>
+            <span style={{color:'black'}}>{record.AssetName}</span>
             </FormItem>               
             </Col>       
             </Row>
@@ -93,7 +93,7 @@ export default class ChangeEdit extends PureComponent {
             <FormItem {...formItemLayout}
             label="标签编号"
             >
-            <span style={{color:'black'}}>{record.tagId}</span>
+            <span style={{color:'black'}}>{record.TagId}</span>
             </FormItem>
             </Col>
             <Col span={12}>
@@ -116,7 +116,7 @@ export default class ChangeEdit extends PureComponent {
             allowClear="true"
             style={{ width: '100%' }}
             placeholder="请选择所在位置"
-            defaultValue={record.lastSiteId}
+            defaultValue={record.LastSiteId}
         >
             {children}
         </Select>
@@ -132,7 +132,7 @@ export default class ChangeEdit extends PureComponent {
             allowClear="true"
             style={{ width: '100%' }}
             placeholder="请选择所在位置"
-            defaultValue={record.currentSiteId}
+            defaultValue={record.CurrentSiteId}
         >
             {children}
         </Select>
@@ -175,9 +175,9 @@ export default class ChangeEdit extends PureComponent {
             <FormItem {...formItemLayout2 }
             style={style}
             label = "备注" > {
-                getFieldDecorator('memo', {
+                getFieldDecorator('Memo', {
                     rules: [{}],
-                    initialValue:record.memo
+                    initialValue:record.Memo
                 })( <
                     TextArea style = {
                         { minHeight: 32 }

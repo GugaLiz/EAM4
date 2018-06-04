@@ -32,7 +32,7 @@ export default class ClassEdit extends PureComponent {
   }
 
   getRowByKey(key, newData) {
-    return (newData || this.state.data).filter(item => item.key === key)[0];
+    return (newData || this.state.data).filter(item => item.Id === key)[0];
   }
   
   cacheOriginData = {};
@@ -137,6 +137,14 @@ export default class ClassEdit extends PureComponent {
     this.props.handleSearch(vals);
   }
 
+  handleRefresh =(e) =>{
+    const val = {
+      Name:this.state.searchName || ''
+    };
+    
+    this.props.handleSearch(val);
+  }
+
   showTotal = (total) =>{
     return `共${this.state.data.length}条`
   }
@@ -147,6 +155,13 @@ export default class ClassEdit extends PureComponent {
       showQuickJumper: true,
       showTotal:this.showTotal
     };
+
+    const styleRef = {
+      marginTop:'-40px',
+      display: this.state.loading?"none":"block"
+    };
+
+
     const columns = [
       {
         title: '编号',
@@ -181,8 +196,8 @@ export default class ClassEdit extends PureComponent {
               <Input
                 value={text}
                 autoFocus
-                onChange={e => this.handleFieldChange(e, 'Name', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
+                onChange={e => this.handleFieldChange(e, 'Name', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
                 placeholder="资产名称"
               />
             );
@@ -200,8 +215,8 @@ export default class ClassEdit extends PureComponent {
                     <DatePicker
                 defaultValue={moment(val)}
                 autoFocus
-                onChange={e => this.handleFieldChange(e, 'CreateTime', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
+                onChange={e => this.handleFieldChange(e, 'CreateTime', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
                 placeholder="创建时间"
                 />
                 );
@@ -219,8 +234,8 @@ export default class ClassEdit extends PureComponent {
               <Input
                 value={text}
                 autoFocus
-                onChange={e => this.handleFieldChange(e, 'CreateAccount', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
+                onChange={e => this.handleFieldChange(e, 'CreateAccount', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
                 placeholder="创建者"
               />
             );
@@ -238,8 +253,8 @@ export default class ClassEdit extends PureComponent {
               <Input
                 value={text}
                 autoFocus
-                onChange={e => this.handleFieldChange(e, 'Memo', record.key)}
-                onKeyPress={e => this.handleKeyPress(e, record.key)}
+                onChange={e => this.handleFieldChange(e, 'Memo', record.Id)}
+                onKeyPress={e => this.handleKeyPress(e, record.Id)}
                 placeholder="备注"
               />
             );
@@ -258,9 +273,9 @@ export default class ClassEdit extends PureComponent {
             if (record.isNew) {
               return (
                 <span>
-                  <a onClick={e => this.saveRow(e, record.key)}>添加</a>
+                  <a onClick={e => this.saveRow(e, record.Id)}>添加</a>
                   <Divider type="vertical" />
-                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+                  <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
                     <a>删除</a>
                   </Popconfirm>
                 </span>
@@ -268,17 +283,17 @@ export default class ClassEdit extends PureComponent {
             }
             return (
               <span>
-                <a onClick={e => this.saveRow(e, record.key)}>保存</a>
+                <a onClick={e => this.saveRow(e, record.Id)}>保存</a>
                 <Divider type="vertical" />
-                <a onClick={e => this.cancel(e, record.key)}>取消</a>
+                <a onClick={e => this.cancel(e, record.Id)}>取消</a>
               </span>
             );
           }
           return (
             <span>
-              <a onClick={e => this.toggleEditable(e, record.key)}>编辑</a>
+              <a onClick={e => this.toggleEditable(e, record.Id)}>编辑</a>
               <Divider type="vertical" />
-              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.key)}>
+              <Popconfirm title="是否要删除此行？" onConfirm={() => this.remove(record.Id)}>
                 <a>删除</a>
               </Popconfirm>
             </span>
@@ -300,6 +315,7 @@ export default class ClassEdit extends PureComponent {
             return record.editable ? styles.editable : '';
           }}
         />
+        <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
       </Fragment>
     );
   }
