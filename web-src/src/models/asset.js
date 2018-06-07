@@ -1,4 +1,4 @@
-import { queryAsset, removeAsset, addAsset, importAsset } from '../services/asset';
+import { queryAsset, removeAsset, addAsset, importAsset, getAsset,updateAsset } from '../services/asset';
 
 export default {
   namespace: 'asset',
@@ -36,6 +36,14 @@ export default {
     },
     *import ({ payload, callback }, { call, put }) {
       const resp = yield call(importAsset, payload);
+      if (callback) callback(resp);
+    },
+    *get ({ payload,callback },{ call,put }){
+      const resp = yield call(getAsset,payload);
+      if(callback) callback(resp);
+    },
+    *update({payload, callback}, { call, put }) {
+      const resp = yield call(updateAsset, payload);
       if (callback) callback(resp);
     },
   },

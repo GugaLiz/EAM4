@@ -203,7 +203,7 @@ export default class TableList extends PureComponent {
               columns={columns}
               onChange={this.handleStandardTableChange}
             />
-          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+          <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>     
     );

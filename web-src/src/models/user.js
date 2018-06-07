@@ -26,12 +26,13 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
+    *fetchCurrent({callback}, { call, put }) {
       const response = yield call(queryCurrent);
       yield put({
         type: 'saveCurrentUser',
         payload: response,
       });
+      if(callback) callback();
     },
 
     *add({ payload, callback }, { call, put }) {

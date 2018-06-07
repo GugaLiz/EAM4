@@ -4,7 +4,7 @@ import { parse } from 'url';
 let tableListDataSource = [];
 for (let i = 0; i < 46; i += 1) {
   tableListDataSource.push({
-    id: i,
+    Id: i,
     Province: '',
     Name: `site ${i}`,
     Lng: 22.7047 + (`${i}`/1000),

@@ -39,9 +39,19 @@ export async function queryChange(params){
   return request(`/api/change?${stringify(params, { indices: false })}`);
 }
 
-export async function queryTag(params){
-  return request(`/api/tag?${stringify(params, { indices: false })}`);
+export async function getChange(params){
+  return request(`/api/change/get?${stringify(params)}`)
 }
+
+export async function updateChange(params){
+  return request(`/api/change/update`,{
+    method:'POST',
+    body: {
+      ...params,
+    },
+  });
+}
+
 
 export async function queryMaintainer(params){
   return request(`/api/maintainer?${stringify(params)}`);
@@ -100,6 +110,10 @@ export async function updateAssetClass(params) {
   });
 }
 
+export async function getAsset(params) {
+  return request(`/api/assetclass/get?${stringify(params)}`);
+}
+
 export async function queryDepartment(params){
   return request(`/api/department?${stringify(params)}`);
 }
@@ -135,9 +149,6 @@ export async function dashboardMain() {
   return request('/api/dashboard/main');
 }
 
-export async function queryTags() {
-  return request('/api/tags');
-}
 
 export async function queryBasicProfile() {
   return request('/api/profile/basic');

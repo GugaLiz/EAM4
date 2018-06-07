@@ -30,12 +30,11 @@ export async function addSite(params) {
   });
 }
 
-export async function updateSite(id,params){
-  return request(`/api/site`,{
-    method:'PUT',
+export async function updateSite(params){
+  return request(`/api/site/update`,{
+    method:'POST',
     body: {
       ...params,
-      method: 'put',
     },
   });
 }
@@ -48,4 +47,8 @@ export async function removeSite(ids) {
       method: 'delete',
     },
   });
+}
+
+export async function getSite(params){
+  return request(`/api/site/get?${stringify(params)}`)
 }

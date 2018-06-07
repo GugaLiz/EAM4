@@ -25,6 +25,7 @@ export default class TableList extends PureComponent {
     expandForm: false,
     selectedRows: [],
     record:{},
+    editRecordId:null,
     searchName:'',
     filterDropdownVisible: false,
     filtered: false,
@@ -121,7 +122,8 @@ export default class TableList extends PureComponent {
   handleItemEdit = (rec) =>{
     this.handleEditModalVisible(true);
     this.setState({
-      record:rec
+      record:rec,
+      editRecordId:rec.Id
     });
   }
 
@@ -197,7 +199,7 @@ export default class TableList extends PureComponent {
 
   render() {
     const { user: { data }, loading } = this.props;
-    const { selectedRows, addModalVisible,editModalVisible, record } = this.state;
+    const { selectedRows, addModalVisible,editModalVisible, record,editRecordId } = this.state;
     //console.info(data)
 
     const parentMethods = {
@@ -306,7 +308,7 @@ export default class TableList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-         <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+         <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <UserAdd
@@ -316,7 +318,8 @@ export default class TableList extends PureComponent {
         <UserEdit
         {...parentMethods}
         modalVisible={editModalVisible}
-        record = {record}   
+        record = {record} 
+        editRecordId={editRecordId}  
         />  
       </PageHeaderLayout>
     );

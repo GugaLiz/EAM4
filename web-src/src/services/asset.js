@@ -32,3 +32,16 @@ export async function importAsset(params) {
     body: params,
   });
 }
+
+export async function updateAsset(params){
+  return request(`/api/asset/update`,{
+    method:'POST',
+    body:{
+      ...params
+    }
+  });
+}
+
+export async function getAsset(params){
+  return request(`/api/asset/get?${stringify(params)}`);
+}

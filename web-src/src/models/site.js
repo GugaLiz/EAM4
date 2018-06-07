@@ -1,5 +1,5 @@
 import { querySite, updateSite, removeSite,
- importSite, addSite, searchSite
+ importSite, addSite, searchSite,getSite
 } from '../services/site';
 
 export default {
@@ -59,22 +59,13 @@ export default {
       });
       if (callback) callback();
     },
-    *updateSite({id,params},{call,put,select}){
-      yield call(updateSite,id,params);
-      const response = yield call(updateSite,payload);
-      yield put({
-        type:'updateSite',
-        payload:response,
-      });
+    *update({payload, callback}, { call, put }) {
+      const resp = yield call(updateSite, payload);
+      if (callback) callback(resp);
     },
-    *update({payload},{select,call,put}){
-      const id = yield select(({site}) => site.currentSite.Id)
-      const newItem = {...payload,id}
-      const data = yield call(update,newItem)
-      yield put({
-        type:'save',
-      
-      });
+    *get ({payload,callback},{call,put}){
+      const response = yield call(getSite,payload);
+      if (callback) callback();
     },
   },
 

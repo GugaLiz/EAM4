@@ -10,25 +10,79 @@ const { TextArea } = Input;
 
 const FormItem = Form.Item;
 const {Content} = Layout;
+@connect(({ asset, loading }) => ({
+    asset,
+    loading: loading.models.asset,
+  }))
 @Form.create()
 export default class AssetEdit extends PureComponent{
   state = {
-    disabled:false
+    recordId: 0,
+    record:{}
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const id = nextProps.editRecordId;
+    if(id != null &&id != this.state.recordId){
+          this.setState({
+            recordId: id
+        });
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'asset/get',
+      payload: {
+        id:id 
+      },
+      callback: (resp) =>{
+        if(resp){
+          if(resp.status=="ok"){
+            const rec = resp.record;
+           this.setState({
+              record: rec,
+            });
+          }else {
+            message.error(resp.message);
+          }
+        }
+      }
+    });
+    }
+}
+
+
+  handleSubmit = (id,values) => {
+    this.props.dispatch({
+        type:'asset/update',
+        payload:{
+            Id:parseInt(id),
+            ...values
+        },
+        callback:function(resp){
+            if(resp){
+                if(resp.status=="ok"){
+                    message.success('修改成功');
+                    this.props.handleEditModalVisible(false);
+                }else{
+                    message.error(resp.message);
+                }
+            }
+        }
+    });
   }
   
   render() {
-    const {data, record, modalVisible, form, handleEdit, handleModalVisible } = this.props;
+    const {data, record,editRecordId, modalVisible, form, handleEdit, handleModalVisible } = this.props;
     //console.log(record)
     const { getFieldDecorator, getFieldValue } = form;
     const okHandle = () => {
       form.validateFields((err, fieldsValue) => {
         if (err) return;
         form.resetFields();
-        this.props.handleEdit(record.key,fieldsValue);
+        this.handleSubmit(record.Id,fieldsValue);
+        //this.props.handleEdit(record.key,fieldsValue);
       });
     };
-
-  
+ 
     const formItemLayout = {
       labelCol: {
         xs: { span: 10 },

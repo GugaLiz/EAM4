@@ -36,7 +36,6 @@ export default class ReaderEdit extends PureComponent{
     siteName: '',
     data: [],
     fetching: false,
-
     recordId: 0,
     record: {}
   }
@@ -195,6 +194,7 @@ const inputNumStyle = {
         placeholder="请选择所在位置"
         notFoundContent={fetching ? <Spin size="small" /> : null}
         filterOption={false}
+        onFocus={this.fetchSite}
         onSearch={this.fetchSite}
         //onChange={this.handleChange}
         onSelect = {this.handleSelect}

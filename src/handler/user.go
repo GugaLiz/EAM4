@@ -14,6 +14,7 @@ func InitUser(e *gin.Engine, r *gin.RouterGroup) {
 	r.POST("/user/updatecurrent", updateCurrent)
 	r.POST("/user/updatepwd", updatePwd)
 	r.POST("/user/disabled", disabledUser)
+	r.GET("/user/get", getUser)
 	r.POST("/user/add", addUser)
 	r.POST("/user/edit", editUser)
 }
@@ -141,12 +142,6 @@ func updatePwd(c *gin.Context) {
 	})
 }
 
-func editUser(c *gin.Context) {
-	c.JSON(200, gin.H{
-		"status": "ok",
-	})
-}
-
 func disabledUser(c *gin.Context) {
 	//can't disabled self
 	c.JSON(200, gin.H{
@@ -227,4 +222,104 @@ func addUser(c *gin.Context) {
 	c.JSON(200, gin.H{
 		"status": "ok",
 	})
+}
+
+func editUser(c *gin.Context) {
+	var m userAddModel
+	if err := c.Bind(&m); err != nil {
+		log.Println(err)
+		c.JSON(500, gin.H{
+			"status": "error",
+		})
+		return
+	}
+
+	if cu, err := getCurrentUser(c); err != nil {
+		log.Println(err)
+		c.JSON(500, gin.H{
+			"status": "error",
+		})
+		return
+	} else {
+		if cu.Role != "admin" {
+			errorHandle(c, "管理员权限才能修改用户信息")
+			return
+		}
+		account := strings.ToLower(m.Account)
+		var user model.User
+		if _, err := db.QueryOne(&user,
+			`SELECT * FROM "user" WHERE account= ?`, account); err != nil {
+			c.JSON(200, gin.H{
+				"status":  "error",
+				"message": "用户账号不存在",
+			})
+			return
+		}
+		email := strings.ToLower(m.Email)
+		var u model.User
+		if _, err := db.QueryOne(&u,
+			`SELECT * FROM "user" WHERE email= ? AND account != ?`,
+			email, account); err == nil {
+			c.JSON(200, gin.H{
+				"status":  "error",
+				"message": "邮箱已经存在",
+			})
+			return
+		}
+		role := "user"
+		if m.Role == "0" {
+			role = "admin"
+		} else if m.Role == "2" {
+			role = "maintainer"
+		}
+		user.Name = m.Name
+		user.Phone = m.Phone
+		user.Role = role
+		user.Email = email
+		user.Memo = m.Memo
+		if err := db.Update(&user); err != nil {
+			log.Println(err)
+			c.JSON(200, gin.H{
+				"status":  "error",
+				"message": "数据库保存发生错误",
+			})
+			return
+		}
+	}
+
+	c.JSON(200, gin.H{
+		"status": "ok",
+	})
+}
+
+func getUser(c *gin.Context) {
+	id := int64OrNull(c.DefaultQuery("id", ""))
+	if id == nil {
+		errorHandle(c, "id is empty or invalid")
+		return
+	}
+	if cu, err := getCurrentUser(c); err != nil {
+		log.Println(err)
+		c.JSON(401, gin.H{
+			"status": "error",
+		})
+	} else {
+		if cu.Role != "admin" {
+			errorHandle(c, "管理员权限才能修改用户信息")
+			return
+		}
+		var item model.User
+		if _, err := db.QueryOne(&item,
+			`SELECT * FROM "user" WHERE id = ?`, id); err != nil {
+			c.JSON(200, gin.H{
+				"status":  "error",
+				"message": "用户账号不存在",
+			})
+			return
+		}
+		c.JSON(200, gin.H{
+			"status": "ok",
+			"record": item,
+		})
+	}
 }

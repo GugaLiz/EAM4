@@ -315,7 +315,7 @@ export default class ClassEdit extends PureComponent {
             return record.editable ? styles.editable : '';
           }}
         />
-        <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+        <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
       </Fragment>
     );
   }

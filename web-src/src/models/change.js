@@ -1,4 +1,4 @@
-import { queryChange } from '../services/api';
+import { queryChange, getChange,updateChange } from '../services/api';
 
 export default {
   namespace: 'change',
@@ -17,6 +17,14 @@ export default {
         type: 'save',
         payload: response,
       });
+    },
+    *get ({ payload,callback },{ call,put }){
+      const resp = yield call(getChange,payload);
+      if(callback) callback(resp);
+    },
+    *update({payload, callback}, { call, put }) {
+      const resp = yield call(updateChange, payload);
+      if (callback) callback(resp);
     },
   },
 

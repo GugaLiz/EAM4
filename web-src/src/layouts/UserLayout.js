@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react';
 import { Link, Redirect, Switch, Route } from 'dva/router';
 import DocumentTitle from 'react-document-title';
-import { Icon } from 'antd';
+import { Icon, Card } from 'antd';
 import GlobalFooter from '../components/GlobalFooter';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.png';
 import { getRoutes } from '../utils/utils';
+import Login from '../routes/User/Login';
 
 const links = [/*
   {
@@ -47,6 +48,7 @@ class UserLayout extends React.PureComponent {
       <DocumentTitle title={this.getPageTitle()}>
         <div className={styles.container}>
           <div className={styles.content}>
+          <div className={styles.main1}>
             <div className={styles.top}>
               <div className={styles.header}>
                 <Link to="/">
@@ -56,6 +58,9 @@ class UserLayout extends React.PureComponent {
                 </Link>
               </div>
             </div>
+            <Login></Login>
+          </div>
+            {/*
             <Switch>
               {getRoutes(match.path, routerData).map(item => (
                 <Route
@@ -67,6 +72,7 @@ class UserLayout extends React.PureComponent {
               ))}
               <Redirect exact from="/user" to="/user/login" />
             </Switch>
+            */}
           </div>
           <GlobalFooter links={links} copyright={copyright} />
         </div>

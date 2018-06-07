@@ -27,6 +27,7 @@ var (
 func InitHandler(e *gin.Engine, r *gin.RouterGroup) {
 	r.POST("/login", login)
 	r.GET("/devicefile/download", downDeviceFile)
+	r.GET("/tag/export", exportTag)
 
 	r.Use(jwt.Auth(secret))
 

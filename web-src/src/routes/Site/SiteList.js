@@ -28,6 +28,7 @@ export default class SiteList extends PureComponent {
     expandForm: false,
     selectedRows: [],
     record:{},
+    editRecordId:null,
     filterDropdownVisible: false,
     filtered: false, 
 
@@ -97,7 +98,8 @@ export default class SiteList extends PureComponent {
     this.handleEditModalVisible(true);
 
     this.setState({
-      record:record
+      record:record,
+      editRecordId:record.Id
     });
   }
 /*
@@ -116,18 +118,27 @@ export default class SiteList extends PureComponent {
   }
   */
 
-  handleEdit = (Id,fields) => {
+  handleEdit = (Id,values) => {
     this.props.dispatch({
-      type:'site/update',
+      type:'site/updateSite',
       payload:{
         Id:Id,
-        description:fields,
+        ...values
       },
+      callback:function(resp){
+        if(resp){
+          if(resp.status=="ok"){
+            message.success('修改成功');
+            this.setState({
+              editModalVisible:false,
+            });
+          }else{
+            message.error(resp.message);
+          }
+        }
+      }
     });
-    message.success('修改成功');
-    this.setState({
-       editModalVisible:false,
-     });
+    
   }
 
   handleDelete = (selectedRows) => {
@@ -201,7 +212,7 @@ export default class SiteList extends PureComponent {
 
   render() {
     const { site: { data }, loading } = this.props;
-    const { selectedRows, importModalVisible, addModalVisible, editModalVisible, record } = this.state;
+    const { selectedRows, importModalVisible, addModalVisible, editModalVisible, record,editRecordId } = this.state;
 
     const dataList = {data}.data.list;
     const maintainers = [];
@@ -311,7 +322,7 @@ export default class SiteList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-          <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+          <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <SiteImport
@@ -323,6 +334,7 @@ export default class SiteList extends PureComponent {
         modalVisible={editModalVisible}
         record = {record}  
         maintainers={maintainers} 
+        editRecordId={editRecordId}
         />  
       </Content>
     );

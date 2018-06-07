@@ -1,4 +1,4 @@
-import { queryTag} from '../services/api';
+import { queryTag, exportTag} from '../services/tag';
 
 export default {
   namespace: 'tag',
@@ -18,6 +18,11 @@ export default {
         payload: response,
       });
     },
+
+    *doExport({ payload }, { call, put }) {
+      console.info(payload);
+      yield call(exportTag, payload);
+   },
   },
 
   reducers: {

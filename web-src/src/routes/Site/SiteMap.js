@@ -23,13 +23,16 @@ L.Icon.Default.mergeOptions({
   	shadowUrl: require('../../assets/markers/marker-shadow.png')
 })
 
-const PopupMarker = ({ children,position }) => (
-  <Marker position={position}>
+const PopupMarker = ({ children,position }) => {
+const items = children.map((item) => (<span key={item.key}>{item.string}<br /></span>))
+
+return  <Marker position={position}>
   <Popup><div>
-  {children}
+  {items}
   </div></Popup>
 </Marker>
-)
+
+}
 
 const MarkersList = ({markers}) => {
   const items = markers.map(({ key,...props}) => (
@@ -48,9 +51,7 @@ export default class SiteMap extends PureComponent {
     dispatch({
       type: 'site/fetch',
     });
-  }
-
-  
+  }  
 
   render() {
     const { site:{data}, loading } = this.props;
@@ -59,8 +60,6 @@ export default class SiteMap extends PureComponent {
 
     const dataList = { data }.data.list;
     let cellPoints = [];
-
-    //cellPoints.push({key:'1',position:[22.7047,113.302],children:'jz'})
 
     const sytlep = {
       width:'100%',
@@ -72,39 +71,17 @@ export default class SiteMap extends PureComponent {
       let name = item.Name;     
       let city = item.City || '';
       let district = item.District || '';
-      let Address = item.Address || '';
+      let address = item.Address || '';
       let maintainer = item.Maintainer || '';
-      let popupDiv = `<div style={stylep}>
-      <span>城市：${city}</span>
-      <br />
-      <span>基站名称：${name}</span>
-      <br />
-      <span>经度：${lng}</span>
-      <br />
-      <span>纬度：${lat}</span>
-      <br />
-      <span>地区：${district}</span>
-      <br />
-      <span>地址：${Address}</span>
-      <br />
-      <span>维护人员：${maintainer}</span>
-      <br />
-      </div>`
-      let popupContent = `<span>城市：${city}</span>
-      <br />
-      <span>基站名称：${name}</span>
-      <br />
-      <span>经度：${lng}</span>
-      <br />
-      <span>纬度：${lat}</span>
-      <br />
-      <span>地区：${district}</span>
-      <br />
-      <span>地址：${Address}</span>
-      <br />
-      <span>维护人员：${maintainer}</span>
-      <br />`
-      cellPoints.push({key:name,position:[lng, lat],children:popupContent});
+      let popupContent = [{key:city,string:`城市：${city}`},
+      {key:name,string:`基站名称：${name}`},
+      {key:lng,string:`经度：${lng}`},
+      {key:lat,string:`纬度：${lat}`},
+      {key:district,string:`地区：${district}`},
+      {key:address,string:`地址：${address}`},
+      {key:maintainer,string:`维护人员：${maintainer}`},
+    ]
+      cellPoints.push({key:name,position:[lat, lng],children:popupContent});
     });
     
     const style= { 
@@ -131,14 +108,6 @@ export default class SiteMap extends PureComponent {
       position:"absolute",
       zIndex: 19999,
     };
-
-    // const createClusterCustomIcon = function (cluster) {
-    //   return L.divIcon({
-    //     html: `<span>${cluster.getChildCount()}</span>`,
-    //     className: styles.markercustom,
-    //     iconSize: L.point(40, 40, true)
-    //   });
-    // };
 
     return (
             <Content>

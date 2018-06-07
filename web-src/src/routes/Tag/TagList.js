@@ -78,8 +78,10 @@ export default class TagList extends PureComponent {
 
   handleSearch = (e) => {
     e.preventDefault();
+    this.doSearch(false);
+  }
 
-
+  doSearch = (isExport) =>{
     const { dispatch, form } = this.props;
     const txt = this.state.searchEPC;
       this.setState({
@@ -91,14 +93,21 @@ export default class TagList extends PureComponent {
           ... this.state.searchFilters
       }
 
-      dispatch({
-        type: 'tag/fetch',
-        payload: vals,
-      });
+      if(isExport){
+        dispatch({
+          type: 'tag/doExport',
+          payload: vals,
+        });
+      }else{
+        dispatch({
+          type: 'tag/fetch',
+          payload: vals,
+        });
+      }
   }
 
   handleRefresh =(e) =>{
-    e.preventDefault();
+    //e.preventDefault();
     const { dispatch } = this.props;
     const val = {
       EPC:this.state.searchFilters || ''
@@ -111,7 +120,7 @@ export default class TagList extends PureComponent {
   }
 
   exportAll = () => {
-    const { dispatch } = this.props;   
+    this.doSearch(true);
   }
 
   exportSelect = (selectedRows) => {
@@ -227,7 +236,7 @@ export default class TagList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-         <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+         <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
       </PageHeaderLayout>

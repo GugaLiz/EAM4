@@ -29,8 +29,8 @@ export default class TableList extends PureComponent {
     record:{},
     filterDropdownVisible: false,
     filtered: false, 
-
     searchName: "",
+    editRecordId:0
   };
 
   componentDidMount() {
@@ -151,7 +151,8 @@ handleImportSuccess = () =>{
     this.handleEditModalVisible(true);
 
     this.setState({
-      record:record
+      record:record,
+      editRecordId:record.Id
     });
   }
 
@@ -213,7 +214,7 @@ handleImportSuccess = () =>{
 
   render() {
     const { asset : {data} , loading } = this.props;
-    const { selectedRows, addModalVisible, editModalVisible, detailModalVisible, record } = this.state;
+    const { selectedRows, addModalVisible, editModalVisible, detailModalVisible, record, editRecordId } = this.state;
     //console.info(data, this.props);
 
     const parentMethods = {
@@ -341,7 +342,7 @@ handleImportSuccess = () =>{
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-            <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+            <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <AssetImport
@@ -352,6 +353,7 @@ handleImportSuccess = () =>{
           {...parentMethods}
           modalVisible={editModalVisible}
           record={record}
+          editRecordId = {editRecordId}
           //data={dataList}
         />
         

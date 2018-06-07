@@ -127,7 +127,7 @@ export default class ReaderList extends PureComponent {
   }
 
   handleItemEdit = (rec) =>{
-    console.info(rec);
+   // console.info(rec);
     this.setState({
       editModalVisible: true,
       editRecordId:rec.Id,
@@ -316,7 +316,7 @@ export default class ReaderList extends PureComponent {
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
-            <div style={styleRef}><Button shape="cicle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
+            <div style={styleRef}><Button shape="circle" icon="sync" type="primary" ghost onClick={() => this.handleRefresh()}></Button> </div>
           </div>
         </Card>
         <CreateForm
